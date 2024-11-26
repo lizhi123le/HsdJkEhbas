@@ -7079,7 +7079,7 @@ function buildXrayVLESSOutbound(tag2, address, port, host, sni, proxyIP2, isFrag
     outbound.streamSettings.tlsSettings = {
       allowInsecure,
       fingerprint: "randomized",
-      alpn: ["h2", "http/1.1"],
+      alpn: ["h3", "http/3"],
       serverName: sni
     };
   }
@@ -7122,7 +7122,7 @@ function buildXrayTrojanOutbound(tag2, address, port, host, sni, proxyIP2, isFra
     outbound.streamSettings.tlsSettings = {
       allowInsecure,
       fingerprint: "randomized",
-      alpn: ["h2", "http/1.1"],
+      alpn: ["h3", "http/3"],
       serverName: sni
     };
   }
@@ -7655,7 +7655,7 @@ function buildClashVLESSOutbound(remark, address, port, host, sni, path, allowIn
   if (tls) {
     Object.assign(outbound, {
       "servername": sni,
-      "alpn": ["h2", "http/1.1"],
+      "alpn": ["h3", "http/3"],
       "client-fingerprint": "random",
       "skip-cert-verify": allowInsecure
     });
@@ -7679,7 +7679,7 @@ function buildClashTrojanOutbound(remark, address, port, host, sni, path, allowI
       "early-data-header-name": "Sec-WebSocket-Protocol"
     },
     "sni": sni,
-    "alpn": ["h2", "http/1.1"],
+    "alpn": ["h3", "http/3"],
     "client-fingerprint": "random",
     "skip-cert-verify": allowInsecure
   };
@@ -8179,7 +8179,7 @@ function buildSingBoxVLESSOutbound(proxySettings, remark, address, port, host, s
     server_port: +port,
     uuid: userID,
     tls: {
-      alpn: "http/1.1",
+      alpn: "http/3",
       enabled: true,
       insecure: allowInsecure,
       server_name: sni,
@@ -8219,7 +8219,7 @@ function buildSingBoxTrojanOutbound(proxySettings, remark, address, port, host, 
     server: address,
     server_port: +port,
     tls: {
-      alpn: "http/1.1",
+      alpn: "http/3",
       enabled: true,
       insecure: allowInsecure,
       server_name: sni,
@@ -8531,7 +8531,7 @@ async function getNormalConfigs(proxySettings, hostName, client) {
   const Addresses = await getConfigAddresses(hostName, cleanIPs, enableIPv6);
   const customCdnAddresses = customCdnAddrs ? customCdnAddrs.split(",") : [];
   const totalAddresses = [...Addresses, ...customCdnAddresses];
-  const alpn = client === "singbox" ? "http/1.1" : "h2,http/1.1";
+  const alpn = client === "singbox" ? "http/3" : "h2,http/3";
   const trojanPass = encodeURIComponent(trojanPassword);
   const earlyData = client === "singbox" ? "&eh=Sec-WebSocket-Protocol&ed=2560" : encodeURIComponent("?ed=2560");
   ports.forEach((port) => {
